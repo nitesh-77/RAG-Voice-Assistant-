@@ -9,34 +9,34 @@ MODEL = 'llama3-groq-70b-8192-tool-use-preview'
 
 # Expanded dummy data
 calendar_data = [
-    {"date": "2024-11-24", "time": "09:00", "event": "Team meeting", "location": "Conference Room A"},
-    {"date": "2024-11-25", "time": "14:00", "event": "Dentist appointment", "location": "123 Health St"},
-    {"date": "2024-11-26", "time": "18:30", "event": "Dinner with friends", "location": "Italian Restaurant"},
-    {"date": "2024-11-27", "time": "10:00", "event": "Project presentation", "location": "Main Office"},
-    {"date": "2024-11-28", "time": "15:00", "event": "Gym session", "location": "Fitness Center"}
+    {"date": "2025-03-10", "time": "09:00", "event": "Team meeting", "location": "Conference Room A"},
+    {"date": "2025-03-25", "time": "14:00", "event": "Dentist appointment", "location": "123 Health St"},
+    {"date": "2025-03-26", "time": "18:30", "event": "Dinner with friends", "location": "Italian Restaurant"},
+    {"date": "2025-03-27", "time": "10:00", "event": "Project presentation", "location": "Main Office"},
+    {"date": "2025-03-28", "time": "15:00", "event": "Gym session", "location": "Fitness Center"}
 ]
 
 email_data = [
     {"from": "boss@company.com", "subject": "Quarterly Review", "date": "2024-11-23", "content": "Please prepare a summary of your projects for our upcoming review."},
     {"from": "friend@email.com", "subject": "Weekend plans", "date": "2024-11-22", "content": "Hey, are we still on for dinner on Saturday?"},
     {"from": "newsletter@tech.com", "subject": "Latest in AI", "date": "2024-11-21", "content": "Breaking: New AI model surpasses human performance in complex reasoning tasks."},
-    {"from": "travel@airline.com", "subject": "Flight Confirmation", "date": "2024-11-20", "content": "Your flight to New York on 2024-09-15 has been confirmed."}
+    {"from": "travel@airline.com", "subject": "Flight Confirmation", "date": "2024-11-20", "content": "Your flight to New Delhi on 2025-03-15 has been confirmed."}
 ]
 
 tasks_data = [
-    {"task": "Finish project proposal", "due": "2024-11-09", "priority": "High", "status": "In Progress"},
-    {"task": "Buy groceries", "due": "2024-11-24", "priority": "Medium", "status": "Not Started"},
-    {"task": "Call mom", "due": "2024-11-25", "priority": "Low", "status": "Not Started"},
-    {"task": "Prepare presentation slides", "due": "2024-11-26", "priority": "High", "status": "Not Started"},
-    {"task": "Book hotel for New York trip", "due": "2024-11-01", "priority": "Medium", "status": "Not Started"}
+    {"task": "Finish project proposal", "due": "2025-03-10", "priority": "High", "status": "In Progress"},
+    {"task": "Buy groceries", "due": "2025-03-24", "priority": "Medium", "status": "Not Started"},
+    {"task": "Call mom", "due": "2025-03-25", "priority": "Low", "status": "Not Started"},
+    {"task": "Prepare presentation slides", "due": "2025-03-10", "priority": "High", "status": "Not Started"},
+    {"task": "Book hotel for New Delhi trip", "due": "2025-03-15", "priority": "Medium", "status": "Not Started"}
 ]
 
 weather_data = {
-    "2024-11-24": {"condition": "Sunny", "temperature": 25, "precipitation": "0%"},
-    "2024-11-09": {"condition": "Partly cloudy", "temperature": 22, "precipitation": "20%"},
-    "2024-11-26": {"condition": "Rain", "temperature": 18, "precipitation": "80%"},
-    "2024-11-27": {"condition": "Overcast", "temperature": 20, "precipitation": "40%"},
-    "2024-11-28": {"condition": "Sunny", "temperature": 27, "precipitation": "0%"}
+    "2025-03-10": {"condition": "Sunny", "temperature": 25, "precipitation": "0%"},
+    "2025-03-12": {"condition": "Partly cloudy", "temperature": 22, "precipitation": "20%"},
+    "2025-03-26": {"condition": "Rain", "temperature": 18, "precipitation": "80%"},
+    "2025-03-27": {"condition": "Overcast", "temperature": 20, "precipitation": "40%"},
+    "2025-03-28": {"condition": "Sunny", "temperature": 27, "precipitation": "0%"}
 }
 
 news_data = [
@@ -54,10 +54,10 @@ contacts_data = [
 ]
 
 expenses_data = [
-    {"date": "2024-11-20", "amount": 50.00, "category": "Groceries"},
-    {"date": "2024-11-21", "amount": 30.00, "category": "Transportation"},
-    {"date": "2024-11-22", "amount": 100.00, "category": "Dining out"},
-    {"date": "2024-11-23", "amount": 200.00, "category": "Shopping"}
+    {"date": "2025-03-10", "amount": 50.00, "category": "Groceries"},
+    {"date": "2025-03-13", "amount": 30.00, "category": "Transportation"},
+    {"date": "2025-03-12", "amount": 100.00, "category": "Dining out"},
+    {"date": "2025-03-11", "amount": 200.00, "category": "Shopping"}
 ]
 
 # Helper functions
