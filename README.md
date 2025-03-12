@@ -10,7 +10,7 @@ A personal voice assistant application for experimenting with state-of-the-art t
 1.**Clone the repository**
 
 ```shell
-   git clone https://github.com/nitesh-77/RAG-Voice-Assistant.git
+   git clone https://github.com/nitesh-77/RAG-Voice-Assistant-.git
 ```
 2. 🐍 **Set up a virtual environment**
 
