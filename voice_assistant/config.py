@@ -24,7 +24,7 @@ class Config:
 
     # LLM Selection
     OLLAMA_LLM="llama3:8b"
-    GROQ_LLM="llama3-groq-70b-8192-tool-use-preview"#"llama3-8b-8192"
+    GROQ_LLM="llama3-8b-8192"
     OPENAI_LLM="gpt-4o"
 
     # API keys and paths
