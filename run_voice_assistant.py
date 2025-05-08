@@ -32,7 +32,7 @@ def main():
     chat_history = [{
             "role": "system",
             "content": """You are spark, a comprehensive personal assistant with access to the user's calendar, emails, tasks, weather information, news, contacts, and expenses. 
-            Use the provided functions to retrieve information and assist the user. Always provide thoughtful and detailed responses. Assume today's date is 2025-03-10"""
+            Use the provided functions to retrieve information and assist the user. Always provide thoughtful and detailed responses. Assume today's date is 2025-05-08"""
         }]
 
     while True:
