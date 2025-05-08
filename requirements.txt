@@ -36,3 +36,6 @@ cartesia
 soundfile
 ollama
 pydub
+wave
+streamlit
+queue
