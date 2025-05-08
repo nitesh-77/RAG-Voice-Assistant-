@@ -6,6 +6,14 @@ import os
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# Global flag to control playback interruption
+playback_should_stop = False
+
+def stop_audio():
+    global playback_should_stop
+    playback_should_stop = True
+
+
 def record_audio(file_path, duration=5, retries=3):
     """
     Record audio from the microphone and save it as a WAV file.
@@ -67,37 +75,67 @@ def record_audio(file_path, duration=5, retries=3):
 
     logging.error("Recording failed after all retries")
 
-def play_audio(file_path):
-    """
-    Play an audio file using pyaudio.
 
-    Args:
-    file_path (str): The path to the audio file to play.
-    """
+def play_audio(file_path):
+    global playback_should_stop
+    playback_should_stop = False  
+
     try:
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Audio file not found: {file_path}")
+        
+        # Check file extension to determine how to play it
+        file_ext = os.path.splitext(file_path)[1].lower()
+        
+        if file_ext == '.wav':
+            # Use PyAudio for WAV files
+            chunk = 1024
+            wf = wave.open(file_path, 'rb')
+            p = pyaudio.PyAudio()
 
-        # Set up parameters for playback
-        chunk = 1024
+            stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                            channels=wf.getnchannels(),
+                            rate=wf.getframerate(),
+                            output=True)
 
-        wf = wave.open(file_path, 'rb')
-        p = pyaudio.PyAudio()
-
-        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                        channels=wf.getnchannels(),
-                        rate=wf.getframerate(),
-                        output=True)
-
-        data = wf.readframes(chunk)
-
-        while data:
-            stream.write(data)
             data = wf.readframes(chunk)
 
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
+            while data:
+                if playback_should_stop:
+                    break
+                stream.write(data)
+                data = wf.readframes(chunk)
+
+
+            stream.stop_stream()
+            stream.close()
+            p.terminate()
+            
+        elif file_ext == '.mp3':
+            try:
+                # Try pygame first
+                import pygame
+                pygame.mixer.init()
+                pygame.mixer.music.load(file_path)
+                pygame.mixer.music.play()
+                while pygame.mixer.music.get_busy():
+                    if playback_should_stop:
+                        pygame.mixer.music.stop()
+                        break
+                    pygame.time.Clock().tick(10)
+                pygame.mixer.quit()
+            except ImportError:
+                # Fallback to playsound if pygame is not available
+                try:
+                    from playsound import playsound
+                    playsound(file_path)
+                except ImportError:
+                    logging.error("Neither pygame nor playsound is installed. Please install one of them to play MP3 files.")
+                    logging.error("Run: pip install pygame or pip install playsound")
+                    raise
+        else:
+            logging.error(f"Unsupported audio format: {file_ext}")
+            return
 
         logging.info(f"Audio playback complete for {file_path}")
     except FileNotFoundError as e:
