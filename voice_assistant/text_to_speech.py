@@ -4,12 +4,14 @@ import json
 import pyaudio
 import elevenlabs
 import soundfile as sf
+import requests
 
 from openai import OpenAI
 from deepgram import DeepgramClient, SpeakOptions
 from elevenlabs.client import ElevenLabs
 from cartesia import Cartesia
 
+from voice_assistant.config import Config
 from voice_assistant.local_tts_generation import generate_audio_file_melotts
 
 def text_to_speech(model: str, api_key:str, text:str, output_file_path:str, local_model_path:str=None):
@@ -34,8 +36,6 @@ def text_to_speech(model: str, api_key:str, text:str, output_file_path:str, loca
             )
 
             speech_response.stream_to_file(output_file_path)
-            # with open(output_file_path, "wb") as audio_file:
-            #     audio_file.write(speech_response['data'])  # Ensure this correctly accesses the binary content
 
         elif model == 'deepgram':
             client = DeepgramClient(api_key=api_key)
@@ -48,25 +48,55 @@ def text_to_speech(model: str, api_key:str, text:str, output_file_path:str, loca
             response = client.speak.v("1").save(output_file_path, SPEAK_OPTIONS, options)
         
         elif model == 'elevenlabs':
-            client = ElevenLabs(api_key=api_key)
-            audio = client.generate(
-                text=text, 
-                voice="Paul J.", 
-                output_format="mp3_22050_32", 
-                model="eleven_turbo_v2"
-            )
-            elevenlabs.save(audio, output_file_path)
+            try:
+                client = ElevenLabs(api_key=api_key)
+
+                # Use your custom voice ID directly
+                voice_id = "piTKgcLEGmPE4e6mEKli"
+                logging.info(f"Using ElevenLabs custom voice ID: {voice_id}")
+
+                # Generate audio using the selected voice ID
+                audio = client.generate(
+                    text=text,
+                    voice=voice_id,
+                    output_format="pcm_16000",  
+                    model="eleven_turbo_v2"
+                )
+
+                # Save as WAV file
+                temp_mp3_path = output_file_path + ".temp"
+                elevenlabs.save(audio, temp_mp3_path)
+
+                import io
+                import numpy as np
+                import soundfile as sf
+
+                with open(temp_mp3_path, 'rb') as f:
+                    audio_data = f.read()
+
+                audio_np = np.frombuffer(audio_data, dtype=np.int16)
+                sf.write(output_file_path, audio_np, 16000)
+
+                import os
+                os.remove(temp_mp3_path)
+
+                logging.info(f"ElevenLabs audio saved to {output_file_path} in WAV format")
+
+            except Exception as e:
+                logging.error(f"ElevenLabs error: {str(e)}")
+                raise
+
         
         elif model == "cartesia":
             client = Cartesia(api_key=api_key)
-            # voice_name = "Barbershop Man"
-            voice_id = "729651dc-c6c3-4ee5-97fa-350da1f88600"#"a0e99841-438c-4a64-b679-ae501e7d6091"
+            
+            voice_id = "f114a467-c40a-4db8-964d-aaba89cd08fa"#"a0e99841-438c-4a64-b679-ae501e7d6091"
             voice = client.voices.get(id=voice_id)
 
-            # You can check out our models at https://docs.cartesia.ai/getting-started/available-models
+            
             model_id = "sonic-english"
 
-            # You can find the supported `output_format`s at https://docs.cartesia.ai/api-reference/endpoints/stream-speech-server-sent-events
+            
             output_format = {
                 "container": "raw",
                 "encoding": "pcm_f32le",
@@ -101,6 +131,24 @@ def text_to_speech(model: str, api_key:str, text:str, output_file_path:str, loca
 
         elif model == "melotts": # this is a local model
             generate_audio_file_melotts(text=text, filename=output_file_path)
+
+        elif model == "piper":  # this is a local model
+            try:
+                response = requests.post(
+                    f"{Config.PIPER_SERVER_URL}/synthesize/",
+                    json={"text": text},
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                if response.status_code == 200:
+                    with open(Config.PIPER_OUTPUT_FILE, "wb") as f:
+                        f.write(response.content)
+                    logging.info(f"Piper TTS output saved to {Config.PIPER_OUTPUT_FILE}")
+                else:
+                    logging.error(f"Piper TTS API error: {response.status_code} - {response.text}")
+
+            except Exception as e:
+                logging.error(f"Piper TTS request failed: {e}")
         
         elif model == 'local':
             with open(output_file_path, "wb") as f:
