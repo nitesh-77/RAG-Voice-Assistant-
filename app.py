@@ -11,7 +11,7 @@ import base64
 import json
 
 
-from voice_assistant.audio import record_audio, play_audio
+from voice_assistant.audio import record_audio, play_audio, stop_audio
 from voice_assistant.transcription import transcribe_audio
 from voice_assistant.response_generation import generate_response
 from voice_assistant.text_to_speech import text_to_speech
@@ -76,6 +76,80 @@ def main():
         page_icon="🎤",
         layout="wide",
     )
+    st.markdown("""
+        <style>
+        * {
+            font-family: 'Segoe UI', 'Helvetica Neue', sans-serif !important;
+            color: #d1d5db;
+        }
+
+        .block-container {
+            background-color: #0d0d0d;
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        /* Title */
+        .stMarkdown h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #f3f4f6;
+            text-align: center;
+        }
+
+        /* Chat bubbles */
+        .stChatMessage {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Primary buttons */
+        .stButton button {
+            border-radius: 8px;
+            padding: 0.5rem 1.2rem;
+            background-color: #1f2937;  /* dark gray */
+            color: #f3f4f6;
+            font-weight: 500;
+            border: 1px solid #374151;
+        }
+        .stButton button:hover {
+            background-color: #374151;  /* slightly lighter gray */
+            color: #f9fafb;
+        }
+
+        /* Stop button styling */
+        div[data-testid="stButton"][aria-label="stop_button_top"] button {
+            background-color: #ef4444 !important;
+            color: white !important;
+            border: none !important;
+        }
+        div[data-testid="stButton"][aria-label="stop_button_top"] button:hover {
+            background-color: #dc2626 !important;
+        }
+
+        /* Inputs & dropdowns */
+        .stTextInput > div > div > input,
+        .stSelectbox > div > div {
+            background-color: #1f2937 !important;
+            color: #d1d5db !important;
+            border: 1px solid #374151 !important;
+        }
+
+        section[tabindex] {
+            background-color: #111827 !important;
+            border: 1px solid #374151 !important;
+            border-radius: 8px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+
+
+
+
 
     
     st.sidebar.title("Settings")
@@ -199,7 +273,14 @@ def main():
                 st.error(f"MeloTTS is not running: {str(e)}")
 
     
-    st.title("🎤 Spark Voice Assistant")
+    st.markdown("""
+        <h1 style="text-align:center; margin-bottom: 0.5rem;">🤖 Spark Voice Assistant</h1>
+        <p style="text-align:center; font-size: 1rem; color: #9ca3af;">
+            Your personal assistant — ready to help.
+        </p>
+    """, unsafe_allow_html=True)
+
+
     
     # Metrics display row
     col1, col2, col3 = st.columns(3)
@@ -209,8 +290,15 @@ def main():
         st.metric(label="Response", value=Config.RESPONSE_MODEL)
     with col3:
         st.metric(label="TTS", value=Config.TTS_MODEL)
+
     
-    st.markdown("Your comprehensive personal assistant - ready to help with your daily tasks!")
+    # Stop speaking button
+    stop_col = st.columns([1])[0]
+    with stop_col:
+        if st.button("🛑 Stop Speaking", key="stop_button_top", use_container_width=True):
+            stop_audio()
+            st.info("Playback stopped. You can now speak again.")
+
     
     # Initialize session state
     if 'chat_history' not in st.session_state:
@@ -225,7 +313,7 @@ def main():
         
         st.session_state.messages.append({
             "role": "assistant", 
-            "content": "Hello! I'm Spark, your comprehensive personal assistant. I'm here to help you manage your time, stay organized, and provide you with relevant information to make your life easier. How can I assist you today?"
+            "content": "Hello! I'm Spark"
         })
     
     # Display chat messages
