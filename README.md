@@ -56,7 +56,11 @@ you can also install FastWhisperApi and run locally
 ```shell
    python run_voice_assistant.py
 ```
+7.  **Run using streamlit**
 
+```shell
+   streamlit run app.py
+```
 
 
 
