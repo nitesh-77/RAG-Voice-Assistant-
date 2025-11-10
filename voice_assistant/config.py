@@ -20,11 +20,11 @@ class Config:
     # Model selection
     TRANSCRIPTION_MODEL = 'groq'  # possible values: openai, groq, deepgram, fastwhisperapi
     RESPONSE_MODEL = 'groq'  # possible values: openai, groq, ollama
-    TTS_MODEL = 'cartesia'  # possible values: openai, deepgram, elevenlabs, melotts, cartesia
+    TTS_MODEL = 'elevenlabs'  # possible values: openai, deepgram, elevenlabs, melotts, cartesia
 
     # LLM Selection
     OLLAMA_LLM="llama3:8b"
-    GROQ_LLM="llama3-8b-8192"
+    GROQ_LLM="llama-3.1-8b-instant"
     OPENAI_LLM="gpt-4o"
 
     # API keys and paths
